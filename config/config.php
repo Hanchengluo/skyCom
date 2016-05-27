@@ -11,7 +11,7 @@ $dbconfig["master"]=array(
 $cacheconfig=array(
 	"file"=>true,
 	"php"=>true,
-	"mysql"=>true,
+	"mysql"=>false,
 	"memcache"=>false
 );
 /*用户自定义函数文件*/
@@ -23,6 +23,6 @@ define("SESSION_USER",0);
 define("REWRITE_ON",0); 
 //rewrite pathinfo
 define("REWRITE_TYPE","rewrite");
-define("TESTMODEL",0);//开发测试模式
+define("TESTMODEL",1);//开发测试模式
 define("SQL_SLOW_LOG",0);//记录慢查询
 ?>

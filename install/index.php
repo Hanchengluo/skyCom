@@ -193,7 +193,7 @@ $dbconfig["master"]=array(
 $cacheconfig=array(
 	"file"=>true,
 	"php"=>true,
-	"mysql"=>true,
+	"mysql"=>false,
 	"memcache"=>false
 );
 /*用户自定义函数文件*/
