@@ -12,7 +12,7 @@ class navbarControl extends skymvc{
 		$group_id=get_post('group_id','i');
 		$group_id=$group_id?$group_id:1;
  
-		$where=" bstatus<11 AND group_id=".$group_id;
+		$where=" bstatus<11 AND pid=0 AND group_id=".$group_id;
 		
 		$option=array(
 			"where"=>$where,
