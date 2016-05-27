@@ -1,0 +1,24 @@
+<div style="height:50px;"></div>
+<div  id="footer">
+
+	<div class="footer-bar  li4">
+    {if !$nv}
+    {get data=nv model=navbar fun=navlist(5)}
+    {/if}
+    	{foreach item=c key=k from=$nv}
+        {if $k lt 4}
+    	<li>
+        	<a href="{R('$c.link_url')}" class="{if $ftnav eq 'index'}active{/if}">
+            	<img class="img" src="{$c.logo|images_site}" width="20"><br>
+                {$c.title}
+            </a>
+        </li>
+        {/if}
+        {/foreach}
+        
+         
+        <div class="clearfix"></div>
+    </div>
+
+</div>
+

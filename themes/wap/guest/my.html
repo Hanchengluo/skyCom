@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+{include file="head.html"}
+<body>
+ <div class="header">
+ <div  class="left-btn goback"><span class="iconfont icon-back"></span></div>
+ 	<div class="title">留言板</div>
+ </div>
+ {include file="guest/nav.html"}
+ <div class="guestlist">
+	{foreach item=c from=$data}
+    	<div class="item">
+        	<div class="title">{$c.title} <small>{$catlist[$c.catid]}</small></div>
+            <div class="row">邮箱：{$c.email} QQ:{$c.qq}</div>
+            <div class="row">留言时间：{$c.dateline|date:Y-m-d H:m:i}</div>
+            <div class="row">留言内容：</div>
+            <div class="content">{$c.content|cutstr:32:...}</div>
+            {if $c.reply_time}
+            	<div class="row">回复时间：{$c.reply_time|date:Y-m-d H:m}</div>
+            	<div class="content">{$c.reply_content|cutstr:32:..}</div>
+            	
+            {else}
+            	<div class="content">暂无回复</div>
+            {/if}
+            <div class="tools">
+            	<a href="{R("index.php?m=guest&a=add&id=$c.id")}">编辑</a> 
+                <a href="{R("index.php?m=guest&a=show&id=$c.id")}">查看</a> 
+                <a href="{R("index.php?m=guest&a=delete&id=$c.id")}">删除</a>
+            </div>
+        </div>
+    {/foreach}
+
+</div>
+<div>{$pagelist}</div>
+ 
+{include file="footer.html"}
+</body>
+</html>

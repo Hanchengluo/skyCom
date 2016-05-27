@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+{include file="head.html"}
+ 
+{get data=data model=html fun=getWord("关于我们")}
+<body>
+<div class="page">
+<div class="header" style="">
+<div  class="left-btn goback"><span class="iconfont icon-back"></span></div>
+<div class="title">{$data.title}</div>
+ 
+</div>
+<div class="main-body">
+
+
+ 
+    <div class="d-content">{$data.content}</div>
+    <div class="clearfix"></div>
+
+</div>
+
+{include file="footer.html"}
+</div>
+</body>
+</html>

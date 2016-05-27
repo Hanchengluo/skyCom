@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+{include file="head.html"}
+
+<body>
+
+ <div class="header">
+     
+    <div class="title">首页</div>
+    
+  </div>
+  <link href="/plugin/flexslider/flexslider.css" rel="stylesheet">
+<div class="main-body">
+  
+   <div class="row">
+        	 
+            	 <section class="slider" >
+        <div class="flexslider ">
+          <ul class="slides">
+          {get data=t_c model=ad fun=listbyno("index_flash",4)}
+               {foreach item=c from=$t_c name=t1}
+              <li><a href="{$c.link1}"  ><img src="{$c.imgurl|IMAGES_SITE}" alt="{$c.title}" /></a></li>
+              {/foreach}
+          </ul>
+        </div>
+      </section>
+
+        </div>
+ 
+ {get data=nv model=navbar fun=navlist(5)}
+ <div class="ind_subnav">
+ 	<ul class="list">
+    {foreach item=c from=$nv}
+    	<li>
+        	<a href="{R('$c.link_url')}"><img class="img" src="{$c.logo|images_site}"><br>
+            {$c.title}</a>
+        </li>   
+    {/foreach}     
+     </ul>
+ </div>    
+    
+ 
+ 
+ 
+  
+    <div class="tabs-item active" id="article">
+    	{get data=tc model=article fun=onList(0,50)}
+             <div class="data-list"> 
+             {foreach item=c from=$tc}
+            {include file="li_item.html"}
+            {/foreach} 
+            </div>
+    </div>
+    
+     
+ 
+   
+</div>
+{include file="footer.html"}
+<script src="/plugin/flexslider/jquery.flexslider-min.js"></script>
+ <script>
+ $('.flexslider').flexslider({
+        animation: "slide",
+        animationLoop: false,
+        itemWidth: "100%",
+        itemMargin: 5,
+        pausePlay: true,
+        start: function(slider){
+          $('body').removeClass('loading');
+        }
+      });
+ 
+ </script>
+</body>
+</html>
