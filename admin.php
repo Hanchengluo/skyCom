@@ -1,6 +1,11 @@
 <?php
 error_reporting(E_ALL ^ E_NOTICE);
 header("Content-type:text/html; charset=utf-8");
+if(!file_exists("config/install.lock"))
+{
+	header("Location: install/");
+	exit;
+}
 if(ini_get("register_globals"))
 {
 	die("请关闭全局变量");

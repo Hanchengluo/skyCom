@@ -15,7 +15,7 @@
      
   
   <tr>
-  	<td>技术支持： <div>QQ群：219949413  <a href="http://www.deitui.com/index.php?m=list&catid=5" target="_blank">技术论坛</a></div></td>
+  	<td>技术支持： <div>QQ群：219949413  <a href="http://www.deitui.com/index.php?m=list&catid=37" target="_blank">技术论坛</a></div></td>
   </tr>
     
    
