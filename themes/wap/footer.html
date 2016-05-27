@@ -2,13 +2,12 @@
 <div  id="footer">
 
 	<div class="footer-bar  li4">
-    {if !$nv}
-    {get data=nv model=navbar fun=navlist(5)}
-    {/if}
+   
+    	 {get data=nv model=navbar fun=navlist(6)}
     	{foreach item=c key=k from=$nv}
         {if $k lt 4}
     	<li>
-        	<a href="{R('$c.link_url')}" class="{if $ftnav eq 'index'}active{/if}">
+        	<a href="{R('$c.link_url')}" class="{if get('m') eq $c.m && get('a') eq $c.a}{if $c.aclabel }{if get($c.aclabel) eq $c.acvalue}active{/if}{else}active{/if}{/if}">
             	<img class="img" src="{$c.logo|images_site}" width="20"><br>
                 {$c.title}
             </a>

@@ -2,7 +2,7 @@
 require("cls_pdo.php");
 $db=new mysql();
 $dbconfig["master"]=array(
-	"host"=>"localhost","user"=>"root","pwd"=>"123","database"=>"skymvc"
+	"host"=>"localhost","user"=>"root","pwd"=>"123","database"=>"skycom"
 );
 $db->set($dbconfig);
 $db->connect();

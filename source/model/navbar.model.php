@@ -28,7 +28,8 @@ class navbarModel extends model{
 			3=>"PC-主导航",			
 			4=>"PC-底部导航",
 			5=>"wap-主导航",
-			6=>"APP-主导航",
+			6=>"wap-底部导航",
+			7=>"APP-主导航",
 		);
 	}
 }
