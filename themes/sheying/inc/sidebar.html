@@ -2,13 +2,13 @@
     <div class="logo"><img src="{$skins}images/logo.jpg"  /></div>
     <div class="nav">
       <ul>
-        <li {if get('m') eq 'default'}id="nav_01"{/if}><a href="/index.php" >网站首页</a></li>
+        <li {if get('m') eq 'index'}id="nav_01"{/if}><a href="/index.php" >网站首页</a></li>
         <li  {if $nvactive eq 'article'}id="nav_01"{/if}><a href="/index.php?m=article&a=list&catid=7" >资讯中心</a></li>
         <li {if $nvactive eq 'product'}id="nav_01"{/if}><a href="/index.php?m=article&a=list&catid=1" >产品展示</a></li>
         <li {if get('a') eq 'aboutus'}id="nav_01"{/if}><a href="/index.php?m=html&a=aboutus" >关于我们</a></li>
         <li {if get('m') eq 'guest'}id="nav_01"{/if}><a href="/index.php?m=guest">客户留言</a></li>
         <li {if get('a') eq 'contact'}id="nav_01"{/if}><a href="/index.php?m=html&a=contact" >联系我们</a></li>
-      </ul>
+      </ul> 
     </div>
     <div class="tel">
       <ul>
