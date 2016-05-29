@@ -12,6 +12,7 @@ if(ini_get("register_globals"))
 }
  
 require("config/config.php");
+require("config/setconfig.php");
 require("config/const.php");
 require("config/version.php");
 define("ROOT_PATH",  str_replace("\\", "/", dirname(__FILE__))."/");
@@ -34,15 +35,19 @@ $smarty_cache_lifetime=3600;//缓存时间
 require("./skymvc/skymvc.php");
 //用户自定义初始化函数
 function userinit(&$base){
+	 
 	global $wap_template_dir,$template_dir;
+	loadSkinsData();
 	$skins=ISWAP?$wap_template_dir:$template_dir;
 	C()->loadConfig("table");
 	$ssuser=C()->get_session('ssuser');
 	C()->smarty->assign(array(
-		"skins"=>$skins,
+		"skins"=>$skins."/",
 		"appindex"=>APPINDEX,
 		"appadmin"=>APPADMIN,
-		"ssuser"=>$ssuser
+		"ssuser"=>$ssuser,
+		"site"=>M("sites")->selectRow(),
+		"seo"=>M("seo")->get(get('m'),get('a'))
 	));
 }
 

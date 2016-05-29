@@ -1,0 +1,26 @@
+<!DOCTYPE >
+<html>
+{include file="head.html"}
+<body>
+<div class="wrap clearfix">
+<!-- left nav start -->
+  {include file="inc/sidebar.html"}
+<!-- left nav end-->
+  <div class="index_right fr">
+    <div  style="margin:100px;">	 
+        <div class="gomsg">{$message}，如果没有自动跳转请点击 <a href="{$url}">跳转</a></div>    
+    </div>
+    {include file="footer.html"}
+</div>
+</div>
+
+<script language="javascript">
+function movenew()
+{
+	document.location="{$url}";
+}
+setTimeout(movenew,2000);
+
+</script>
+</body>
+</html>

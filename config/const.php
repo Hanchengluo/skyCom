@@ -8,7 +8,7 @@ define("APPMODULE","/module.php");
 define("AUTO_CHECK_BAD_WORD",false);
 define("OB_GZIP",false);
 //模板
-define("SKINS","index");
+define("SKINS",'sheying');
 //模板
 define("WAPSKINS","wap");
 define("WAP_DOMAIN","");

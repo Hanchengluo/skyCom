@@ -1,0 +1,128 @@
+<!DOCTYPE >
+<html>
+{include file="head.html"}
+<body>
+<div class="wrap clearfix">
+<!-- left nav start -->
+  {include file="inc/sidebar.html"}
+<!-- left nav end-->
+  <div class="index_right fr">
+  {get data=banner model=ad fun=listbyno("index_flash",1)}
+    <div class="banner"><img src="{$banner[0].imgurl|images_site}" /></div>
+    <div class="main">
+    
+    <!--服务项目 start-->
+     <div class="index_obj">
+       <div class="title">服务项目 / Service Project</div>
+       <div class="index_obj_img clearfix">
+       	{get data=procats model=category fun=children(SKINS_PROCAT) }
+         <ul>
+         	{foreach item=c key=k from=$procats}
+            {if $k lt 3}
+           <li class="{if $k eq 2}no_mar{/if}"><img src="{$c.logo|images_site}"  height="200"/><a href="/index.php?m=article&a=list&catid={$c.catid}"><span>{$c.cname}</span></a></li>
+           {/if}
+           {/foreach}
+           
+         </ul>
+       </div>
+     </div>
+    <!--服务项目 end-->
+    
+    <!--关于我们 start-->
+    <div class="index_about">
+      <div class="title">关于我们 / About Us</div>
+      <div class="index_about_con">
+      {get data=about model=html fun=getword('关于我们')}
+        {$about.info}
+      </div>
+    </div>
+    <!--关于我们 end-->
+    
+    
+    <!--产品展示 start-->
+    <div class="index_show">
+      <div class="title">作品展示 / Work Display</div>
+      
+      <div class="projects-holder clearfix">
+         {get data=pics model=article fun=recommendList(SKINS_PROCAT,6)}
+         {foreach item=c from=$pics key=k}
+          <div class="col-md-4 col-sm-6 fl">
+              <div class="project-item">
+                  <img src="{$c.imgurl|images_site}"  height="218">
+                  <div class="project-hover">
+                      <div class="inside">
+                          <h5><a href="/index.php?m=article&a=show&id={$c.id}">{$c.title}</a></h5>
+                          <p>{$c.description}</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          {/foreach}
+          
+      </div>
+      
+    </div>
+    <!--产品展示 end-->
+     
+    <!--资讯中心 start-->
+    <div class="index_news">
+      <div class="title">资讯中心  / Information Center</div>
+      <ul>
+      	{get data=arts model=article fun=recommendList(SKINS_ATRCAT,8)}
+        
+        <li class="clearfix mar_b">
+          <div class="index_news_img fl"><img src="{$arts[0].imgurl|images_site}.small.jpg"  height="270"/></div>
+          <div class="index_news_list fr">
+            <h4>{$arts[0].title}</h4>
+            <div class="news_desc">{$arts[0].description}</div>
+            <ul>
+            {foreach item=c key=k from=$arts}
+            	{if $k>0 && $k lt 4}
+              <li><a href="/index.php?m=article&a=show&id={$c.id}">{$c.title}</a></li>
+              
+              {/if}
+               {/foreach}
+            </ul>
+          </div>
+        </li>
+       
+        
+        <li class="clearfix mar_b">
+          <div class="index_news_list fl">
+            <h4>{$arts[4].title}</h4>
+            <div class="news_desc">{$arts[4].description}</div>
+            <ul>
+              {foreach item=c key=k from=$arts}
+            	{if $k>4 && $k lt 8}
+              <li><a href="">{$c.title}</a></li>
+              
+              {/if}
+               {/foreach}
+            </ul>
+          </div>
+          
+          <div class="index_news_img fr"><img src="{$skins}images/showpic05.jpg"  height="270"/></div>
+        </li>
+        
+        
+      </ul>
+    </div>
+    <!--资讯中心 end-->
+    
+    <!--footer start-->
+    <div class="link">
+      友情链接： 
+      {get data=links model=link fun=select(array("limit"=>5,"order"=>"orderindex"))}
+      {foreach item=c from=$links}
+      <a href="{$c.link_url}" target="_blank">{$c.title}</a>
+      {/foreach}
+    </div>
+    {include file="footer.html"}
+    <!--footer end-->
+  </div>  
+
+</div>  
+  
+</div>
+</body>
+</html>

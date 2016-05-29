@@ -1,0 +1,37 @@
+<!DOCTYPE >
+<html>
+{include file="head.html"}
+
+<body>
+<div class="wrap clearfix">
+<!-- left nav start -->
+  {include file="inc/sidebar.html"}
+<!-- left nav end-->
+{get data=data model=html fun=getword('关于我们')}
+<!--right-->
+  <div class="show_right fr">
+    {include file="inc/banner.html"}
+    <div class="main">
+     <div class="locat">当前位置：<a href="">首页</a> > <a href="">{$data.title}</a></div>
+     
+    <div class="content clearfix"> 
+   
+  <div class="contact_left fl">
+    <h3>关于我们 / Contact Us</h3>
+    <h4>{$site.sitename}</h4>
+    <div class="cont_lxwm">
+      {$data.content}
+    </div>
+    
+  </div>
+  </div>
+    
+    
+     <!--footer start-->
+    {include file="footer.html"}
+    <!--footer end--> 
+   </div>
+  </div>
+ </div>
+</body>
+</html>

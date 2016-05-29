@@ -4,4 +4,10 @@ $skinsauthor="官网模板";
 $skinsversion="v1.0";
 $skinsauthorsite="http://www.deitui.com";
 $skinstype="wap";
+$skinsinfo="产品分类：skins_procat,资讯分类:skins_artcat";
+$skinsdir="wap";
+$skinsdata=array(
+	"skins_procat"=>1,
+	"skins_artcat"=>7
+);
 ?>

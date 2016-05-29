@@ -12,6 +12,7 @@ class templateControl extends skymvc{
 		$hd=opendir($dir);
 		$arr=array();
 		$i=0;
+		$cfs=$this->getAllConfig();
 		while(($f=readdir($hd))!=false)
 		{
 			if($f!="." && $f!=".."  && $f!='admin' && !is_file($dir.$f)  )
@@ -27,6 +28,12 @@ class templateControl extends skymvc{
 					$arr[$i]['skinsauthorsite']=$skinsauthorsite;
 					$arr[$i]['skinstype']=$skinstype;
 					$arr[$i]['skinsprice']=$skinsprice;
+					$arr[$i]['skinsdata']=$skinsdata;
+					if(isset($cfs[$skinsdir])){
+						$arr[$i]['myskinsdata']=$cfs[$skinsdir];
+					}
+					$arr[$i]['skinsinfo']=$skinsinfo;
+					$arr[$i]['skinsdir']=$skinsdir;
 					unset($skinsprice);
 					if(SKINS==$f or WAPSKINS==$f )
 					{
@@ -52,6 +59,12 @@ class templateControl extends skymvc{
 					$arr[$i]['skinsauthorsite']=$skinsauthorsite;
 					$arr[$i]['skinstype']=$skinstype;
 					$arr[$i]['skinsprice']=$skinsprice;
+					$arr[$i]['skinsdata']=$skinsdata;
+					if(isset($cfs[$skinsdir])){
+						$arr[$i]['myskinsdata']=$cfs[$skinsdir];
+					}
+					$arr[$i]['skinsinfo']=$skinsinfo;
+					$arr[$i]['skinsdir']=$skinsdir;
 					unset($skinsprice);
 					if(SKINS==$f or WAPSKINS==$f )
 					{
@@ -78,6 +91,12 @@ class templateControl extends skymvc{
 					$arr[$i]['skinsauthorsite']=$skinsauthorsite;
 					$arr[$i]['skinstype']=$skinstype;
 					$arr[$i]['skinsprice']=$skinsprice;
+					$arr[$i]['skinsdata']=$skinsdata;
+					if(isset($cfs[$skinsdir])){
+						$arr[$i]['myskinsdata']=$cfs[$skinsdir];
+					}
+					$arr[$i]['skinsinfo']=$skinsinfo;
+					$arr[$i]['skinsdir']=$skinsdir;
 					unset($skinsprice);
 					if(SKINS==$f or WAPSKINS==$f )
 					{
@@ -95,6 +114,7 @@ class templateControl extends skymvc{
 			}
 			
 		}
+		 
 		$this->smarty->assign("skinslist",$arr);
 		$this->smarty->display("template/index.html");
 	}
@@ -117,10 +137,45 @@ class templateControl extends skymvc{
 		$this->goall("模板切换成功");
 	}
 	
+	public function onSkinsData(){
+		$skinsdata=post('skinsdata','a');
+		$skinsdata=str_replace("\r","",$skinsdata);
+		$skinsdir=post('skinsdir','h');
+		$arr=explode("\n",$skinsdata);
+	 
+		$str="<?php\r\n";
+		foreach($arr as $k=>$v){
+			if(!empty($v)){
+				$a=explode("=>",$v);
+				$str.='define("'.strtoupper(trim($a[0])).'","'.trim($a[1]).'");'."\r\n";
+			}
+		}
+		$row=M("template_config")->selectRow("skinsdir='".$skinsdir."'");
+		if($row){
+			M("template_config")->update(array("skinsdata"=>$skinsdata),"skinsdir='".$skinsdir."'");
+		}else{
+			M("template_config")->insert(array("skinsdata"=>$skinsdata,"skinsdir"=>$skinsdir));
+		}
+		file_put_contents("temp/skinsdata/".($skinsdir."skinsdata.php"),$str);
+		$this->goAll("保存成功");
+		
+	}
+	
 	public function onSave(){
 		
 	}
 	
+	
+	public function getAllConfig(){
+		$data=M("template_config")->select();
+		if($data){
+			foreach($data as $v){
+				$sdata[$v['skinsdir']]=$v['skinsdata'];
+			}
+			return $sdata;
+		}
+		return array("skyCom是一个最简单的企业网站建站系统");
+	}
 	
 	
 	

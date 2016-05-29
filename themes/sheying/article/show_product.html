@@ -1,0 +1,44 @@
+<!DOCTYPE >
+<html>
+{assign var="nvactive" value="product"}
+{include file="head.html"}
+
+<body>
+<div class="wrap clearfix">
+<!-- left nav start -->
+  {include file="inc/sidebar.html"}
+<!-- left nav end-->
+
+<!--right-->
+  <div class="show_right fr">
+   {include file="inc/banner.html"}
+    <div class="main">
+     <div class="locat">当前位置：<a href="">首页</a> > <a href="">{$data.title}</a></div>
+     
+     <div class="about_tit"><h4>{$data.title}</h4></div>
+     <div class="about_data">文章作者：admin 上传时间：{$data.datleine|date:Y-m-ds}</div>
+     <div class="about_img"><img src="{$data.imgurl|imageS_site}"  id="imgs"/></div>
+     <div class="about_con">{$data.content}
+</div>
+     <div class="con_page clearfix">
+       {if $last_rs}<div class="prev fl">上一篇：<a href="/index.php?m=article&a=show&id={$last_rs.id}">{$last_rs.title}</a></div>{/if}
+       {if $next_rs}<div class="next fr">下一篇：<a href="/index.php?m=article&a=show&id={$next_rs.id}">{$next_rs.title}</a></div>{/if}
+     </div> 
+     <!--推荐信息-->
+     <div class="contenttjtext clearfix">
+      <h2>推荐信息</h2>
+       <ul>
+       	{get data=tj model=article fun=hotlist(SKINS_PROCAT,10)}
+        {foreach item=c from=$tj}
+         <li><a href="/index.php?m=article&a=show&id={$c.id}">{$c.title}</a></li>
+        {/foreach}
+       </ul>
+      </div>
+      <!--footer start-->
+    {include file="footer.html"}
+    <!--footer end-->
+    </div>
+   </div>
+</div>
+</body>
+</html>

@@ -2,7 +2,7 @@
 require("cls_pdo.php");
 $db=new mysql();
 $dbconfig["master"]=array(
-	"host"=>"localhost","user"=>"root","pwd"=>"123","database"=>"skycom"
+	"host"=>"localhost","user"=>"root","pwd"=>"123","database"=>"skyCom"
 );
 $db->set($dbconfig);
 $db->connect();
@@ -10,6 +10,7 @@ $db->connect();
 $res=$db->query("show tables");
 $insdata=$data=array();
 $rss=$db->fetch_array(PDO::FETCH_NUM);
+$data=array();
 foreach($rss as $rs){
 	
 	$table=$rs[0];
@@ -21,6 +22,7 @@ foreach($rss as $rs){
 	
 	if(isMerge($table)) continue;
 	$t_d=getAll("select * from $table");
+	 
 	if($t_d){
 		foreach($t_d as $v){			 
 			$data[$table][]=$v;	 
@@ -46,8 +48,9 @@ function getAll($sql){
 		foreach($data as $rs){
 			$rdata[]=mysql_escape($rs);
 		}
+		return $rdata;
 	}
-	return $rdata;
+	
 }
 
 function isMerge($table){

@@ -40,41 +40,7 @@ function slog($data){
 	fwrite($f,$data);
 	fclose($f);
 }
-function insert_data($table,$das){
-	global $link;
-	if(empty($das)) return false;
-	foreach($das[0] as $field=>$v){
-		$fields[]=$field;
-	}
-	$sq=$sql="INSERT INTO ".$table."(".implode(",",$fields).") values";
-	$i=0;
-	$isval=false; 
-	 
-	foreach($das as $k=>$data){
-		  
-		 $fieldsval=array();
-		foreach($data as $v){
-			$fieldsval[]=$v;		 
-		}
-		
-		if($k>0){
-			$sql.=",";
-		}	
-	 
-		$sql.=" ("._implode($fieldsval).") ";
-		$isval=true;
-		if($i>1000){
-			$i=0;
-			$isval=false;
-			mysqli_query($link,$sql);
-			$sql=$sq;
-		}
-	}
-	mysqli_query($link,$sql);
-	 
-	echo mysqli_error($link);
-	 
-}
+
 
 /*检测权限*/
 function checkmode($dirs,$type=2){
@@ -136,6 +102,74 @@ function checkmode($dirs,$type=2){
 	}
 	return $data;
 }
+/*************开始处理******************/
+
+function sqlQuery($sql){
+	global $link;
+	global $dbconfig;
+	if(!$link or !mysqli_ping($link)){
+		$link=sqlConn();
+	}
+	mysqli_query($link,$sql);
+	if($err=mysqli_error($link)){
+		echo "<br>".$sql."<br>";
+		echo $err;
+	}
+}
+$link=NULL;
+function sqlConn(){
+	global $link,$dbconfig;
+	
+		$link=mysqli_connect($dbconfig['master']['host'],$dbconfig['master']['user'],$dbconfig['master']['pwd']) or die("数据库连接出错了");
+		mysqli_select_db($link,$dbconfig['master']['database']);
+		mysqli_query($link,"SET NAMES utf8");
+		mysqli_query($link,"SET sql_mode=''");
+		return $link;
+}
+
+function insert_data($table,$das){
+	global $link;
+	if(empty($das)) return false;
+	foreach($das[0] as $field=>$v){
+		$fields[]=$field;
+	}
+	$sq=$sql="INSERT INTO ".$table."(".implode(",",$fields).") values";
+	$i=0;
+	$isval=false; 
+	 
+	foreach($das as $k=>$data){
+		  
+		 $fieldsval=array();
+		foreach($data as $v){
+			$fieldsval[]=$v;		 
+		}
+		
+		if($i>0){
+			$sql.=",";
+		}	
+	 	if(!empty($fieldsval)){
+			$sql.=" ("._implode($fieldsval).") ";
+		}
+		$isval=true;
+		$i++;
+		if($i>200){
+			
+			sqlQuery($sql);
+			$sql=$sq;
+			$i=0;
+			$isval=false;
+		}
+		
+	}
+	 
+	if($isval){
+		sqlQuery($sql);
+	}
+	 
+	 
+}
+
+/***********End 数据***************/
 set_time_limit(0);
 require("cls_smarty.php");
 $smarty= new Smarty();
@@ -201,12 +235,20 @@ $user_extends=array(
 	"ex_fun.php"
 );
 /*Session配置 1为自定义 0为系统默认*/
-define("SESSION_USER",0);
+define("SESSION_USER",1);
 define("REWRITE_ON",0); 
-//rewrite pathinfo
-define("REWRITE_TYPE","rewrite");
-define("TESTMODEL",0);//开发测试模式
+define("REWRITE_TYPE","pathinfo");
 define("SQL_SLOW_LOG",0);//记录慢查询
+define("TESTMODEL",1);//开发测试模式
+define("HOOK_AUTO",true);//开放全局hook
+//UPLOAD_OSS--- aliyun/qiniu/upyun/0 不分离上传设为0
+define("UPLOAD_OSS",0);
+define("UPLOAD_DEL",0);
+define("OSS_BUCKET","skycms");
+//define("IMAGES_SITE","http://skycms.oss-cn-hangzhou.aliyuncs.com/");
+define("IMAGES_SITE","http://".$_SERVER[\'HTTP_HOST\']."/");
+//静态文件
+define("STATIC_SITE","http://".$_SERVER[\'HTTP_HOST\']."/");
 ?>';
 	file_put_contents("../config/config.php",$str);
 	$smarty->assign("step",2);
@@ -216,13 +258,8 @@ define("SQL_SLOW_LOG",0);//记录慢查询
 }elseif($_REQUEST['step']==3)
 {
 	ob_implicit_flush(true);
-	require_once("../config/config.php");
-	//开始创建数据库
-	if(!$link=mysqli_connect($dbconfig['master']['host'],$dbconfig['master']['user'],$dbconfig['master']['pwd']))
-	{
-		echo "<script>alert('服务器连接失败');history.go(-1);</script>";
-		exit();
-	}
+	require("../config/config.php");
+	sqlconn();
 	if(!mysqli_select_db($link,$dbconfig['master']['database']))
 	{
 		
@@ -233,8 +270,6 @@ define("SQL_SLOW_LOG",0);//记录慢查询
 			exit();
 		}
 	}
-	mysqli_query($link,"SET sql_mode=''");
-	mysqli_query($link,"SET NAMES utf8");
 	//创建表结构
 	$dbfile="install.json";
 	if(file_exists($dbfile)){
@@ -242,10 +277,10 @@ define("SQL_SLOW_LOG",0);//记录慢查询
 		$iarr=json_decode($content,true);
 		if(!empty($iarr)){
 			 
-			echoflush('正在创建表');
+			
 			foreach($iarr as $key=>$v){
-		 		
-				mysqli_query($link,str_replace("sky_",TABLE_PRE,$v));
+		 		echoflush('正在创建表'.$key);
+				sqlquery(str_replace("sky_",TABLE_PRE,$v));
 			}
 			 
 		}
@@ -282,11 +317,8 @@ define("SQL_SLOW_LOG",0);//记录慢查询
 }elseif($_REQUEST['step']==5)
 {
 	if($_POST)
-	{	require_once("../config/config.php");
-		$link=mysqli_connect($dbconfig['master']['host'],$dbconfig['master']['user'],$dbconfig['master']['pwd']);
-		mysqli_select_db($link,$dbconfig['master']['database']);
-		mysqli_query($link,"SET NAMES utf8");
-		 mysqli_query($link,"SET sql_mode=''");
+	{	require("../config/config.php");
+		$link=mysql_conn();
 		$adminname=trim($_POST['adminname']);
 		$pwd1=trim($_POST['pwd1']);
 		$pwd2=trim($_POST['pwd2']);

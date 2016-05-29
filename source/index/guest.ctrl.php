@@ -13,7 +13,12 @@
 		}
 		
 		public function onInit(){
-			if(in_array(get('a'),array("add","save","my","delete"))){
+			if(GUESTLOGIN==1){
+				$arr=array("add","save","my","delete");
+			}else{
+				$arr=array("my","delete");		
+			}
+			if(in_array(get('a'),$arr)){
 				if(!$this->get_session("ssuser")){
 					$this->goAll("请先登录",0,0,"/index.php?m=login");
 				}
@@ -114,14 +119,24 @@
 			
 			$id=get_post("id","i");
 			$data=M("guest")->postdata();
+			if(GUESTCHECKCODE==1){
+				if(post('yzm')!=$this->get_session("checkcode")){
+					$this->goAll("验证码出错了",1);
+				}
+			}
+			unset($data['bstatus']);
 			$data['userid']=intval($this->get_session('ssuser','userid'));
-			if(empty($data['title']) ){
+			if(isset($data['title']) && empty($data['title']) ){
 				$this->goAll("主题不能为空",1);
 			}
+			if(isset($data['telephone']) && empty($data['telephone']) ){
+				$this->goAll("手机不能为空",1);
+			}
+			
 			if(empty($data['content']) ){
 				$this->goAll("内容不能为空",1);
 			}
-			if(!is_email($data['email'])){
+			if(isset($data['email']) && !is_email($data['email'])){
 				$this->goAll("邮箱格式不正确",1);
 			}
 			$data["dateline"]=time();

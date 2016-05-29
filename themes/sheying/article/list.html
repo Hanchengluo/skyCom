@@ -1,0 +1,53 @@
+<!DOCTYPE >
+<html>
+{assign var="nvactive" value="article"}
+{include file="head.html"}
+
+<body>
+<div class="wrap clearfix">
+<!-- left nav start -->
+   {include file="inc/sidebar.html"}
+<!-- left nav end-->
+
+<!--right-->
+  <div class="show_right fr">
+    {include file="inc/banner.html"}
+    <div class="main">
+     <div class="locat">当前位置：<a href="">首页</a> > <a href="">新闻中心</a></div>
+     
+     <div class="newslist">
+      <ul class="clearfix">
+      {foreach item=c key=k from=$list}
+       <li class="{if k % 2==1}no_mar{/if}">
+        <div class="newslist_img fl"><a href="/index.php?m=article&a=show&id={$c.id}" ><img src="{$skins}images/objpic02.jpg" /></a></div>
+        <div class="newslist_txt fr">
+          <h4><a href="/index.php?m=article&a=show&id={$c.id}" >{$c.title}</a></h4>
+          <h5>data：{$c.dateline|date:Y-m-d}</h5>
+          <div class="newslist_txt_con">{$c.description}</div>
+        </div>
+      </li>
+      {if k % 2==1}
+      <div class="bor_bot"></div>
+      {/if}
+      {/foreach}
+      
+        
+      
+       
+      
+       <div class="bor_bot"></div>
+       </ul>
+      </div>
+      <!--分页-->
+      <div class="Page clearfix">
+       {$pagelist}
+      </div>
+      
+      <!--footer start-->
+    {include file="footer.html"}
+    <!--footer end-->
+    </div>
+   </div>
+   </div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE >
+<html>
+{assign var="nvactive" value="product"}
+{include file="head.html"}
+
+<body>
+<div class="wrap clearfix">
+<!-- left nav start -->
+  {include file="inc/sidebar.html"}
+<!-- left nav end-->
+  
+  <!--right-->
+  <div class="show_right fr">
+   {include file="inc/banner.html"}
+    <div class="main">
+     <div class="locat">当前位置：<a href="">首页</a> > <a href="/index.php?m=article&a=list&catid=1">作品展示</a></div>
+      <!--分类-->
+      <div class="show_fenl clearfix">
+         <ul>
+         {get data=procats model=category fun=children(SKINS_PROCAT) }
+         {foreach item=c key=k from=$procats}
+           <li class="{if $k eq 0}no_mar{/if}"><a href="/index.php?m=article&a=list&catid={$c.catid}">{$c.cname}</a></li>
+         {/foreach}  
+            
+         </ul>
+       </div>
+      <!--图片-->
+      <div class="showpic clearfix">
+        <ul>
+         {foreach item=c key=k from=$list}
+          <li class="{if $k%3==2 }no_mar{/if}"><a href="/index.php?m=article&a=show&id={$c.id}"><img src="{$c.imgurl|images_site}"  /><span>{$c.title}</span></a></li>
+         {/foreach} 
+           
+        </ul>
+      <!--分页-->  
+      <div class="Page clearfix">
+     {$pagelist}
+  </div>
+  
+     <!--footer start-->
+    {include file="footer.html"}
+    <!--footer end-->
+      
+      </div>
+    </div>
+
+</div>
+</body>
+</html>

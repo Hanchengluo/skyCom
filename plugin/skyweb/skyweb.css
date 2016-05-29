@@ -111,7 +111,10 @@ a:hover{text-decoration:underline;color:#3184db;}
 .w96,.w97,.w98{margin:0 auto;}
 .h220{height:220px;}
 .h200{height:200px;}
+
 .h30{height:30px;}
+.h60{height:60px;}
+.h100{height:100px;}
 /****列 布局****/
 .row {
 	width: 100%;

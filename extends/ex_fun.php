@@ -2,6 +2,18 @@
 function myDiy($str){
 	echo myDiy();
 }
+
+function loadSkinsData(){
+	$wap="temp/skinsdata/".str_replace("/","-",WAPSKINS)."skinsdata.php";
+	$pc="temp/skinsdata/".str_replace("/","-",SKINS)."skinsdata.php";
+	if(ISWAP && file_exists($wap)){
+		require($wap);
+	}
+	if(!ISWAP && file_exists($pc)){
+		require($pc);
+	}
+}
+
  function loadEditor(){
 	if(ISWAP){
 		echo '<link href="/plugin/umeditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">

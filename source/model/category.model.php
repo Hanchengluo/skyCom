@@ -79,16 +79,14 @@ class categoryModel extends model{
 		return $data;
 	}
 	
-	public function children($pid=0,$model_id=0,$bstatus=0){
+	public function children($pid=0,$bstatus=0){
 		$pid=intval($pid);
-		$model_id=intval($model_id);
+
 		$bstatus=intval($bstatus);
-		$cache_key="category_children_".$model_id."_".$bstatus."_".$pid;
+		$cache_key="category_children_".$bstatus."_".$pid;
 		if($d=cache()->get($cache_key)) return $d;
 		$where="   bstatus<99 ";
-		if($model_id){
-			$where.=" AND model_id=".intval($model_id)."  ";
-		}
+		
 		if($bstatus){
 			$where.=" AND bstatus=$bstatus ";
 		}
