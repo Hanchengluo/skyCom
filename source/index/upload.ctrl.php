@@ -10,10 +10,14 @@ class uploadControl extends skymvc{
 		$this->smarty->display("upload/default.html");
 	}
 	
-	public function onUpload(){
-		if(!$this->get_session("ssuser")){
-			//exit(json_encode(array("err"=>"请先登录",1))); 
+	public function onInit(){
+		if(!$this->get_session("ssuser") or $this->get_session('ssadmin')){
+			exit(json_encode(array("err"=>"请先登录",1))); 
 		}
+	}
+	
+	public function onUpload(){
+		
 		$this->loadClass("upload");
 		//上传的文件目录
 		$this->upload->uploaddir="attach/my/";
