@@ -25,6 +25,9 @@ ID:<input type="text" name="id" value="{$smarty.get.id|intval}" class="w50" />
                 	<option value="{$c_2.catid}" {if get('catid') eq $c_2.catid} selected="selected"{/if} class="o_c_2">|__{$c_2.cname}</option>
                     {foreach item=c_3 from=$c_2.child}
                     <option value="{$c_3.catid}" {if get('catid') eq $c_3.catid} selected="selected"{/if} class="o_c_3"> |____{$c_3.cname}</option>
+                    	{foreach item=c4 from=$c_3.child}
+                        	<option value="{$c4.catid}" {if get('catid') eq $c4.catid} selected="selected"{/if} class="o_c_3"> |_____{$c4.cname}</option>
+                        {/foreach}
                     {/foreach}
                 {/foreach}
                 {/foreach}
@@ -82,7 +85,7 @@ ID:<input type="text" name="id" value="{$smarty.get.id|intval}" class="w50" />
 <tr>
    <td>{$c.id}</td>
    <td>{$c.title}</td>
-   <td>{$c.cname}{if $c.cname_2nd}>{$c.cname_2nd}{/if}{if $c.cname_3nd}>{$c.cname_3nd}{/if}</td>
+   <td>{$c.cname} </td>
    
   
    <td>{$c.dateline|date:Y-m-d}</td>

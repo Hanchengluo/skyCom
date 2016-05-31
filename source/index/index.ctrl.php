@@ -12,16 +12,8 @@ class indexControl extends skymvc
 	{
 		 
 		 
-		if(ISWAP){
-			$this->smarty->assign("welcome","这是手机版哦，欢迎使用skymvc，让我们共同努力！");
-		}else{
-			$this->smarty->assign("welcome","欢迎使用<a href=\"http://www.skymvc.com\" target=\"_blank\">skymvc</a>，让我们共同努力！");
-		}
-		$this->hook("run","这是传入hook的数据");
-		$this->smarty->assign(array(
-			"who"=>M("index")->test(),
-			"ssuser"=>$this->get_session('ssuser')
-		));
+		 $data=M("category")->children(0);
+	 
 		$this->smarty->display("index.html");
 	}
 }

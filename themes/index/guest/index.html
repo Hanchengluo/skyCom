@@ -16,8 +16,7 @@
    <td>id</td>
    <td>主题</td>
    <td>类型</td>
-   <td>邮箱</td>
-   <td>QQ</td>
+   < 
    <td>留言时间</td>
    <td>留言内容</td>
    <td>回复内容</td>
@@ -29,8 +28,7 @@
    <td>{$c.id}</td>
    <td><a href="{R('/index.php?m=guest&a=show&id=$c.id')}">{$c.title}</a></td>
    <td>{$catlist[$c.catid]}</td>
-   <td>{$c.email}</td>
-   <td>{$c.qq}</td>
+   
    <td>{$c.dateline|date:Y-m-d H:m}</td>
    <td>{$c.content|cutstr:32:...}</td>
    <td>{$c.reply_content|cutstr:32:..}</td>

@@ -36,7 +36,7 @@
 			}
 			$catid=get_post('catid','i');
 			if($catid){
-				$cids=$this->category->id_family($catid);
+				$cids=M("category")->id_family($catid);
 				$url.="&catid=$catid";
 				if($cids){
 					$where.=" AND catid in("._implode($cids).")";
@@ -51,6 +51,18 @@
 				$where.=" AND is_recommend=".($s_recommend==1?1:0);
 			}
 			
+			$s_new=get_post('s_new','i');
+			if($s_new){
+				$url.="&s_new=".$s_new;
+				$where.=" AND isnew=".($s_new==1?1:0);
+			}
+			
+			$s_hot=get_post('s_hot','i');
+			if($s_hot){
+				$url.="&s_hot=".$s_hot;
+				$where.=" AND ishot=".($s_hot==1?1:0);
+			}
+			
 			$limit=20;
 			$start=get("per_page","i");
 			$option=array(
@@ -61,13 +73,24 @@
 			);
 			$rscount=true;
 			$data=M("article")->select($option,$rscount);
+			if($data){
+				foreach($data as $k=>$v){
+					$catids[]=$v['catid'];
+				}
+				$cats=M("category")->getListByIds($catids);
+				foreach($data as $k=>$v){
+					$v['cname']=$cats[$v['catid']]['cname'];
+					$data[$k]=$v;
+				}
+			}
 			$pagelist=$this->pagelist($rscount,$limit,$url);
 			$this->smarty->goassign(
 				array(
 					"data"=>$data,
 					"pagelist"=>$pagelist,
 					"rscount"=>$rscount,
-					"url"=>$url
+					"url"=>$url,
+					"cat_list"=>M("category")->children(0)
 				)
 			);
 			$this->smarty->display("article/index.html");

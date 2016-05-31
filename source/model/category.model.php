@@ -6,6 +6,19 @@ class categoryModel extends model{
 		parent::__construct($base);
 		$this->table="category";
 	}
+	
+	/**根据id选出分类**/
+	public function getListByIds($ids,$fields="catid,logo,title"){
+		if(empty($ids)) return false;
+		$d=$this->select(array("where"=>" catid in("._implode($ids).")"));
+		if($d){
+			foreach($d as $v){
+				$data[$v['catid']]=$v;
+			}
+			return $data;
+		}
+	}
+	
 	/**
 	*获取模板
 	*catid 分类id
@@ -79,51 +92,33 @@ class categoryModel extends model{
 		return $data;
 	}
 	
-	public function children($pid=0,$bstatus=0){
+	public function children($pid,$bstatus=0){
 		$pid=intval($pid);
-
 		$bstatus=intval($bstatus);
 		$cache_key="category_children_".$bstatus."_".$pid;
-		if($d=cache()->get($cache_key)) return $d;
-		$where="   bstatus<99 ";
-		
 		if($bstatus){
-			$where.=" AND bstatus=$bstatus ";
+			$where="   bstatus=$bstatus ";
+		}else{
+			$where="  bstatus<11 ";
 		}
-		$c_1=$this->select(array("where"=>$where." AND pid=".$pid,"order"=>"orderindex asc"));
-		if($c_1){
-			foreach($c_1 as $k=>$v){
+		$td=$this->select(array("where"=>$where." AND pid=".$pid,"order"=>"orderindex asc"));
+		if(!empty($td)){
+			foreach($td as $k=>$v){
+				$child=$this->children($v['catid'],$bstatus);
+				if($child){
+					$v['child']=$child;
+				}
 				$v['last_post']=json_decode($v['last_post'],true);
 				$v['logo']=IMAGES_SITE($v['logo']);
-				$c_1[$k]=$v;
-				$c_2[$k]=$v;
-				$c_2=$this->select(array("where"=>$where."  AND pid=".$v['catid'],"order"=>"orderindex asc"));
-				
-				if($c_2){
-					foreach($c_2 as $k_2=>$v_2){
-						$c_3=$this->select(array("where"=>$where." AND pid=".$v_2['catid'],"order"=>"orderindex asc"));
-						if($c_3){
-							foreach($c_3 as $k_3=>$v_3){
-								$v_3['last_post']=json_decode($v_3['last_post'],true);
-								$v_3['logo']=IMAGES_SITE($v_3['logo']);
-								$c_3[$k_3]=$v_3;
-							}
-							
-						}
-						$v_2['logo']=IMAGES_SITE($v_2['logo']);
-						$v_2['last_post']=json_decode($v_2['last_post'],true);
-						$c_2[$k_2]=$v_2;
-						$c_2[$k_2]['child']=$c_3;
-					}
-				}
-				
-				$c_1[$k]['child']=$c_2;
+				$td[$k]=$v;
 			}
+			cache()->set($cache_key,$c_1,30); 
+			return $td;
 		}
-		cache()->set($cache_key,$c_1,30);
-		return $c_1;	
-		 
+		return false;
 	}
+	
+	 
 	
 	public function getList($option,$child=true){
 		$cat=$this->select($option);
@@ -220,29 +215,7 @@ class categoryModel extends model{
 		
 	}
 	
-	public function get_attr_cat_id($catid){
-		$catid=intval($catid);
-		$r1=$this->selectRow("catid=".$catid);
-		if(!$r1)return 0;
-		if($r1['attr_cat_id']) return $r1['attr_cat_id'];
-		if($r1['pid']){
-			$parent=$this->selectRow("catid=".$r1['pid']);
-			if(!$parent) return 0;
-			if($parent['attr_cat_id']) return $parent['attr_cat_id'];
-		}
-		if($parent['pid']){
-			$parent=$this->selectRow("catid=".$parent['pid']);		
-			if(!$parent) return 0;
-			if($parent['attr_cat_id']) return $parent['attr_cat_id'];
-		}
-		
-		if($parent['pid']){
-			$parent=$this->selectRow("catid=".$parent['pid']);		
-			if(!$parent) return 0;
-			if($parent['attr_cat_id']) return $parent['attr_cat_id'];
-		}
-		return 0;
-	}
+ 
 	
 	
 }

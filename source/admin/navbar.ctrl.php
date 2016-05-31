@@ -71,7 +71,7 @@ class navbarControl extends skymvc{
 		}else{
 			M("navbar")->insert($data);
 		}
-		$this->goall($lang['edit_success']);
+		$this->goall("保存成功");
 	}
 	
 	public function onDelete(){

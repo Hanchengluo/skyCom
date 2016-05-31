@@ -3,7 +3,6 @@ class sitesControl extends skymvc{
 	
 	public function __construct(){
 		parent::__construct();
-		$this->loadModel(array("sites"));
 	}
 	
 	public function onDefault(){
@@ -11,10 +10,10 @@ class sitesControl extends skymvc{
 	}
 	
 	public function onAdd(){
-		$data=$this->sites->selectRow("");
+		$data=M("sites")->selectRow("");
 		if(empty($data)){
 			$data=array("siteid"=>1,"sitename"=>"默认站点");
-			$this->sites->insert($data);
+			M("sites")->insert($data);
 		}
 		$this->smarty->assign("data",$data);
 		$this->smarty->display("sites/add.html");
@@ -38,16 +37,16 @@ class sitesControl extends skymvc{
 		$data['statjs']=$_POST['statjs'];
 		$data['wapbg']=post('wapbg','h');
 		if($siteid){
-			$this->sites->update($data,"1=1");
+			M("sites")->update($data,"1=1");
 		}else{
-			$this->sites->insert($data);
+			M("sites")->insert($data);
 		}
 		$this->onwriteconfig();
 		$this->goall("保存成功");
 	}
 	
 	public function onwriteconfig(){
-		$data=$this->sites->select();
+		$data=M("sites")->select();
 		$str="<?php\r\n";
 		if($data){
 		foreach($data as $k=>$v){
@@ -61,7 +60,7 @@ class sitesControl extends skymvc{
 		$str.="?>";
 		}
 		file_put_contents("config/sites.php",$str);
-		$this->goall($this->lang['operation_success']);
+		$this->goall("保存成功");
 	}
  
 	

@@ -259,7 +259,7 @@ define("STATIC_SITE","http://".$_SERVER[\'HTTP_HOST\']."/");
 {
 	ob_implicit_flush(true);
 	require("../config/config.php");
-	sqlconn();
+	$link=sqlconn();
 	if(!mysqli_select_db($link,$dbconfig['master']['database']))
 	{
 		
@@ -318,7 +318,7 @@ define("STATIC_SITE","http://".$_SERVER[\'HTTP_HOST\']."/");
 {
 	if($_POST)
 	{	require("../config/config.php");
-		$link=mysql_conn();
+		$link=sqlconn();
 		$adminname=trim($_POST['adminname']);
 		$pwd1=trim($_POST['pwd1']);
 		$pwd2=trim($_POST['pwd2']);
