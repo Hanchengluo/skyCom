@@ -50,17 +50,17 @@ class model{
 	}
 	
 	public function begin(){
-		 
+		return false; 
 		return $this->db->query("BEGIN");
 	}
 	
 	public function commit(){
-		 
+		return false;  
 		return $this->db->query("COMMIT");
 	}
 	
 	public function rollback(){
-		 
+		return false;  
 		return $this->db->query("rollback");
 	}
 	

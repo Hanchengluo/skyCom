@@ -9,6 +9,7 @@ class mysql
 	public $base;
 	public $query=NULL;//最近操作的
 	public $sql;
+	public $stime;
 	/**
 	*mysql初始化 
 	*/
@@ -46,7 +47,7 @@ class mysql
 		if(!empty($config)){
 			$master=$config;
 		}else{
-		$master=$this->dbconfig['master'];
+			$master=$this->dbconfig['master'];
 		}
 		$arr=explode(":",$master['host']);
 		$host=$arr[0];
@@ -71,43 +72,54 @@ class mysql
 	  * 执行sql语句
 	  */
 	 public function query($sql){
-		 
-		if($this->testmodel){
+		try{   
+			if($this->testmodel){
+				
+				$GLOBALS['skysqlrun'] .="<br>".$sql;
+				$GLOBALS['skysqlnum'] ++;
+			}
+			$this->sql=$sql;
+			if(!$this->db){
+				$this->connect();
+			}
+			$this->stime=microtime(true);
+			$this->query=$rs = $this->db->prepare($sql);
+			$rs->execute();
+			 
 			
-			$GLOBALS['skysqlrun'] .="<br>".$sql;
-			$GLOBALS['skysqlnum'] ++;
-		}
-		$this->sql=$sql;
-		if(!$this->db){
-			$this->connect();
-		}
-		$st=microtime(true);
-	 	$this->query=$rs = $this->db->prepare($sql);
-		$rs->execute();
-		 
-		if(SQL_SLOW_LOG==1){
-			if($qt=microtime(true)-$st>0.7){
-				if(strpos($sql,"select")!==false){
-					skylog("sqlslow.txt","执行时间:".$qt."秒  ".$sql); 
+			if($this->testmodel){
+				$GLOBALS['query_time']+=microtime(true)-$st;
+			}
+			if($this->errno() >0 ){
+				$e=$this->error();
+				if(TESTMODEL){
+					showError("sql错误：".$sql." ".$e[2]);
+					exit;
+				}else{
+					showError("sql错误");
+					exit;
 				}
-			}
+			};
+			return $rs;
+		}catch(PDOException $e){  
+			if($e->errorInfo[0] == 70100 || $e->errorInfo[0] == 2006){  
+				$this->connect();
+				return $this->query($sql);  
+			}else exit($e->errorInfo[2]);  
 		}
-		if($this->testmodel){
-			$GLOBALS['query_time']+=microtime(true)-$st;
-		}
-		if($this->errno() >0 ){
-			$e=$this->error();
-			if(TESTMODEL){
-				showError("sql错误：".$sql." ".$e[2]);
-				exit;
-			}else{
-				showError("sql错误");
-				exit;
-			}
-		};
-		return $rs;
 	 }
 	 
+	 public function slowLog(){
+		 if(SQL_SLOW_LOG==1){
+			$qt=(microtime(true)-$this->stime);
+			if(!defined("SQL_SLOW_TIME")){
+				 define("SQL_SLOW_TIME",0.7);
+			}
+			if($qt>SQL_SLOW_TIME){
+				skylog("sqlslow.txt","执行时间:".$qt."秒  ".$this->sql); 
+			}
+		}
+	 }
 
 	 /**
 	  * 返回结果集中的数目
@@ -240,6 +252,7 @@ class mysql
 		{
 			$res-> setFetchMode ( PDO :: FETCH_ASSOC );
 			$arr=$res->fetchAll();
+			$this->slowLog();
 			return $arr;
 		}else
 		 {
@@ -255,6 +268,7 @@ class mysql
 		$res=$this->query($sql);
 		if($res !==false){
 			$rs=$res->fetch();
+			$this->slowLog();
 			if($rs!==false){
 				return $rs[0];
 			}else{
@@ -273,6 +287,7 @@ class mysql
         if ($res !== false){
 			$res-> setFetchMode ( PDO :: FETCH_ASSOC );
 			$arr=$res->fetch();
+			$this->slowLog();
             return $arr;
         }else{
             return false;
@@ -292,6 +307,7 @@ class mysql
 					$arr[]=$v[0];
 				}
 			}
+			$this->slowLog();
 			return $arr;
 		}else{
 			return false;

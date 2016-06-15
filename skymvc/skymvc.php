@@ -2,7 +2,7 @@
 if(!defined("ROOT_PATH")){
 	define("ROOT_PATH",  str_replace("\\", "/", dirname(dirname(__FILE__)))."/");
 }
-define("SKYVERSION",4.1);
+define("SKYVERSION",4.2);
 //全局变量
 //sql执行语句
 $GLOBALS['skysqlrun']="";
@@ -150,19 +150,18 @@ function M($model,&$base=NULL){
 }
 /*加载模块的模型*/
 function MM($module,$model,&$base=NULL){
-	if(isset($GLOBALS[$model.'Model'])){
+	if(isset($GLOBALS[$model.'MModel'])){
 	 
-		return $GLOBALS[$model.'Model'];
+		return $GLOBALS[$model.'MModel'];
 	}else{
 		if(file_exists(ROOT_PATH."module/".$module."/source/model/$model.model.php")){		
 			require_once    ROOT_PATH."module/".$module."/source/model/$model.model.php";
 			$_model="{$model}Model";
-			 	
 			$m=new $_model($base);
 			$m->setDb($model);
 			 
-			$GLOBALS[$model.'Model']=$m;		 
-			return $GLOBALS[$model.'Model'];
+			$GLOBALS[$model.'MModel']=$m;		 
+			return $GLOBALS[$model.'MModel'];
 		}else{
 			//controler  model调用
 			$_model="{$model}Model";
@@ -170,9 +169,9 @@ function MM($module,$model,&$base=NULL){
 			$m=new model($base);
 			$m->setDb($model);
 			$m->table=$model;			
-			$GLOBALS[$model.'Model']=$m;
+			$GLOBALS[$model.'MModel']=$m;
 			 		 
-			return $GLOBALS[$model.'Model'];
+			return $GLOBALS[$model.'MModel'];
 		}
 	}
 }
@@ -304,7 +303,7 @@ if(function_exists("userinit"))
 if(method_exists($control,'onInit')){
 	$control->onInit();
 }
-if(AUTO_CHECK_BAD_WORD){
+if(AUTO_CHECK_BAD_WORD==1){
 	$control->checkBadWord();
 }
 $control->$method();
@@ -361,8 +360,11 @@ class skymvc
 	
 	public function initsmarty()
 	{
-		
-		include_once "class/cls_smarty.php";
+		if(defined("SMARTYPHP") && SMARTYPHP=="php" ){
+			include_once "class/cls_smarty_php.php";
+		}else{
+			include_once "class/cls_smarty.php";
+		}
 		$this->smarty=new Smarty();
 		if(ISWAP){
 			$this->smarty->template_dir   =S_WAP_TEMPLATE_DIR;
