@@ -11,7 +11,7 @@ class uploadControl extends skymvc{
 	}
 	
 	public function onInit(){
-		if(!$this->get_session("ssuser") or $this->get_session('ssadmin')){
+		if(!$this->get_session("ssuser") && !$this->get_session('ssadmin')){
 			exit(json_encode(array("err"=>"请先登录",1))); 
 		}
 	}
@@ -31,8 +31,18 @@ class uploadControl extends skymvc{
 		//根据Id存储
 		$this->upload->iddir=0;
 		$data=$this->upload->uploadfile("upimg");
-		//print_r($data);
-		echo json_encode($data);	
+		if($data['err']==''){
+			$this->loadConfig("image");
+			$this->loadClass("image");
+			$data['imgurl']=$data['filename'];
+			$data['trueimgurl']=$data['truefilename']=IMAGES_SITE($data['filename']);
+			$cfs=$this->config_item("thumb");
+			foreach($cfs as $k=>$v){
+				$this->image->makeThumb($data['filename'].$v['name'],$data['filename'],$v['w'],$v['h'],$v['all']);
+			}
+			$this->goAll("success",0,$data);
+		}
+		$this->goAll($data['err'],0);
 		
 	}
 	
